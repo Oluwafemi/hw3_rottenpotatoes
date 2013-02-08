@@ -2,11 +2,11 @@
 
 Given /the following movies exist/ do |movies_table|
   movies_table.hashes.each do |movie|
+    Movie.create!(movie)
     # each returned element will be a hash whose key is the table header.
     # you should arrange to add that movie to the database here.
   end
-  #flunk "Unimplemented"
-  pending
+
 end
 
 # Make sure that one string (regexp) occurs before or after another one
@@ -24,8 +24,39 @@ end
 #  "When I check the following ratings: G"
 
 When /I (un)?check the following ratings: (.*)/ do |uncheck, rating_list|
+  ratings = rating_list.split(", ")
+  if uncheck.nil?
+    ratings.each { |rating| check("ratings_" + rating) }
+  else
+    ratings.each { |rating| uncheck("ratings_" + rating) }
+  end
   # HINT: use String#split to split up the rating_list, then
   #   iterate over the ratings and reuse the "When I check..." or
   #   "When I uncheck..." steps in lines 89-95 of web_steps.rb
-  pending
 end
+
+Then /I should have: (.*) in the rating column/ do |ratings|
+  rating_list = ratings.split(", ")
+  rating_elems = page.all('#movies tbody tr td[2]')
+  returned = rating_elems.map { |elem| elem.text }
+
+  rating_list.each { |rating| assert returned.include?(rating) }
+end
+
+Then /I should not have: (.*) in the rating column/ do |ratings|
+  rating_list = ratings.split(", ")
+  rating_elems = page.all('#movies tbody tr td[2]')
+  returned = rating_elems.map { |elem| elem.text }
+
+  rating_list.each { |rating| assert (not returned.include?(rating)) }
+end
+
+  # HINT: use String#split to split up the rating_list, then
+  #   iterate over the ratings and reuse the "When I check..." or
+  #   "When I uncheck..." steps in lines 89-95 of web_steps.rb
+
+
+
+
+# 
+# 
