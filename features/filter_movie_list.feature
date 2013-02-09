@@ -5,7 +5,6 @@ Feature: display list of movies filtered by MPAA rating
   I want to see movies matching only certain MPAA ratings
 
 Background: movies have been added to database
-
   Given the following movies exist:
   | title                   | rating | release_date |
   | Aladdin                 | G      | 25-Nov-1992  |
@@ -23,16 +22,19 @@ Background: movies have been added to database
   
 Scenario: restrict to movies with 'PG' or 'R' ratings
   Given I check the following ratings: PG, R
+  And I uncheck the following ratings: G, PG-13
   When I press "Refresh"
   Then I should have: PG, R in the rating column
   And I should not have: PG-13, G in the rating column
 
 
 Scenario: no ratings selected
-  # see assignment
+  
 
 Scenario: all ratings selected
-  # see assignment
+  When I check all the ratings
+  And I press "Refresh"
+  Then I should see all ratings in the rating column
 
 
 # enter step(s) to uncheck all other checkboxes

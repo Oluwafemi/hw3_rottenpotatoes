@@ -50,10 +50,6 @@ When /^(?:|I )go to (.+)$/ do |page_name|
 end
 
 When /^(?:|I )press "([^"]*)"$/ do |button|
-  rating_elems = page.all('#movies tbody tr td[2]')
-  returned = rating_elems.map { |elem| elem.text }
-
-  puts returned
   click_button(button)
 end
 
